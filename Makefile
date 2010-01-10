@@ -2,8 +2,8 @@ SBDIR=~/sketchbook/hacksense
 
 all: comm signer
 
-signer: signer.o hmac.o sha2.o
-	$(CC) signer.o hmac.o sha2.o -o signer
+signer: signer.o hmac.o sha2.o uuid.o
+	$(CC) signer.o hmac.o sha2.o uuid.o -o signer
 
 hmac.o: hmac/hmac_sha2.c
 	$(CC) hmac/hmac_sha2.c -c -o hmac.o

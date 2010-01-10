@@ -2,17 +2,29 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hmac/hmac_sha2.h"
+#include "uuid.h"
 
 #define KEYFILE "hacksense.key"
 
 int main(int argc, char **argv) {
-	char *key, output[SHA256_DIGEST_SIZE], i;
+	char *key, output[SHA256_DIGEST_SIZE], i, *info;
+	int infolen;
 	long keysize;
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s <message>\n", argv[0]);
 		return 1;
 	}
+
+	infolen = strlen(argv[1]) + 37; /* GUID + '!' + info */
+	info = (char*)malloc(infolen + 1); /* \0 */
+	if (!info) {
+		perror("Infostring allocation");
+		return 1;
+	}
+	create_uuid(info);
+	info[36] = '!';
+	strcpy(info + 37, argv[1]);
 
 	FILE *keyfile = fopen(KEYFILE, "r");
 	if (!keyfile) {
@@ -33,7 +45,8 @@ int main(int argc, char **argv) {
 	fread(key, keysize, 1, keyfile);
 	fclose(keyfile);
 
-	hmac_sha256(key, keysize, argv[1], strlen(argv[1]), output, sizeof(output));
+	hmac_sha256(key, keysize, info, infolen, output, sizeof(output));
+	printf("%s!", info);
 	for (i = 0; i < sizeof(output); i++) {
 		printf("%02hhx", output[i]);
 	}
