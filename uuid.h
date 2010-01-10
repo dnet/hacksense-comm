@@ -22,8 +22,6 @@
 #ifndef UUID_H
 #define UUID_H
 
-#include <qstring.h>
-
-QString createUUID();
+void create_uuid(char *out);
 
 #endif /* UUID_H */

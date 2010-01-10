@@ -235,11 +235,9 @@ static void uuid_unparse(const uuid_t uu, char *out)
 		uuid.node[3], uuid.node[4], uuid.node[5]);
 }
 
-QString createUUID() {
-	char s[37];
+void create_uuid(char *out) {
 	uuid_t uu;
 	uuid_generate_time(uu);
-	uuid_unparse(uu, s);
-	return QString(s);
+	uuid_unparse(uu, out);
 }
 

@@ -14,6 +14,9 @@ sha2.o: hmac/sha2.c
 signer.o: signer.c
 	$(CC) signer.c -c -o signer.o
 
+uuid.o: uuid.c
+	$(CC) uuid.c -c -o uuid.o
+
 comm: comm.c
 	$(CC) comm.c -o comm
 
