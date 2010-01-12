@@ -1,21 +1,16 @@
 SBDIR=~/sketchbook/hacksense
+SIGNER_OBJECTS=signer.o hmac_sha2.o sha2.o uuid.o
 
 all: comm signer
 
-signer: signer.o hmac.o sha2.o uuid.o
-	$(CC) signer.o hmac.o sha2.o uuid.o -o signer
+signer: $(SIGNER_OBJECTS)
+	$(CC) $(SIGNER_OBJECTS) -o signer
 
-hmac.o: hmac/hmac_sha2.c
-	$(CC) hmac/hmac_sha2.c -c -o hmac.o
+%.o: hmac/%.c
+	$(CC) $< -c -o $@
 
-sha2.o: hmac/sha2.c
-	$(CC) hmac/sha2.c -c -o sha2.o
-
-signer.o: signer.c
-	$(CC) signer.c -c -o signer.o
-
-uuid.o: uuid.c
-	$(CC) uuid.c -c -o uuid.o
+%.o: %.c
+	$(CC) $< -c -o $@
 
 comm: comm.c
 	$(CC) comm.c -o comm
