@@ -1,5 +1,5 @@
 SBDIR=~/sketchbook/hacksense
-SIGNER_OBJECTS=signer.o hmac_sha2.o sha2.o uuid.o
+SIGNER_OBJECTS=signer.o hmac_sha2.o sha2.o
 
 all: comm signer
 

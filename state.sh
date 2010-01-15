@@ -4,5 +4,6 @@ if [ "$1" = "get" ]; then
 	echo "Wget'd state: $STATE"
 	exit $STATE
 else
-	wget "http://vsza.hu/hacksense/submit/`./signer $1`" -q
+	UUID=`uuidgen -r`
+	wget "http://vsza.hu/hacksense/submit/`./signer $UUID!$1`" -q -O -
 fi

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hmac/hmac_sha2.h"
-#include "uuid.h"
 
 #define KEYFILE "hacksense.key"
 
@@ -16,15 +15,8 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	infolen = strlen(argv[1]) + 37; /* GUID + '!' + info */
-	info = (char*)malloc(infolen + 1); /* \0 */
-	if (!info) {
-		perror("Infostring allocation");
-		return 1;
-	}
-	create_uuid(info);
-	info[36] = '!';
-	strcpy(info + 37, argv[1]);
+	infolen = strlen(argv[1]);
+	info = argv[1];
 
 	FILE *keyfile = fopen(KEYFILE, "r");
 	if (!keyfile) {
