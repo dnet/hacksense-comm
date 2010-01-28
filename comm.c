@@ -16,7 +16,6 @@ int main(int argc, char** argv)
 	struct termios oldtio, newtio;
 	char buf;
 	int fd;
-	char state = 0;
 	char script[SLEN];
 
 	fd = open(PORT, O_RDWR | O_NOCTTY);
@@ -39,19 +38,17 @@ int main(int argc, char** argv)
 	tcflush(fd, TCIFLUSH);
 	tcsetattr(fd, TCSANOW, &newtio);
 
-	snprintf(script, SLEN, SCRIPT_S, "get");
-	state = WEXITSTATUS(system(script));
-	printf("Loaded state %d\n", state);
-
 	while (1) {
 		read(fd, &buf, 1);
 		printf("Buffer: 0x%hhx :: ", buf);
 		if ((buf & WRITE) == WRITE) {
-			state = buf & 1;
+			char state = buf & 1;
 			printf("State changed to %d\n", state);
 			snprintf(script, SLEN, SCRIPT_D, state);
 			system(script);
 		} else {
+			snprintf(script, SLEN, SCRIPT_S, "get");
+			char state = WEXITSTATUS(system(script)) | 0x40;
 			write(fd, &state, 1);
 			printf("State sent (%d)\n", state);
 		}
