@@ -6,7 +6,7 @@
 
 #define BAUDRATE B9600
 #define PORT "/dev/tts/1"
-#define WRITE 2
+#define READ 0x80
 #define SCRIPT_D "./state.sh %d"
 #define SCRIPT_S "./state.sh %s"
 #define SLEN 16
@@ -41,14 +41,13 @@ int main(int argc, char** argv)
 	while (1) {
 		read(fd, &buf, 1);
 		printf("Buffer: 0x%hhx :: ", buf);
-		if ((buf & WRITE) == WRITE) {
-			char state = buf & 1;
-			printf("State changed to %d\n", state);
-			snprintf(script, SLEN, SCRIPT_D, state);
+		if ((buf & READ) != READ) {
+			printf("State changed to %d\n", buf);
+			snprintf(script, SLEN, SCRIPT_D, buf);
 			system(script);
 		} else {
 			snprintf(script, SLEN, SCRIPT_S, "get");
-			char state = WEXITSTATUS(system(script)) | 0x40;
+			char state = WEXITSTATUS(system(script));
 			write(fd, &state, 1);
 			printf("State sent (%d)\n", state);
 		}
